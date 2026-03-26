@@ -414,6 +414,7 @@ body.curtain-closed {
     z-index: 20;
     background: rgba(255, 255, 255, 0.85);
     backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     color: var(--maroon);
     border: none;
     border-radius: 50px;
@@ -531,6 +532,7 @@ body.curtain-closed {
     display: flex;
     background: var(--glass-bg);
     backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     border: 1px solid var(--glass-border);
     border-radius: 40px;
     padding: 4px;
@@ -1190,6 +1192,7 @@ html[dir="rtl"] .dress-note {
     align-items: center;
     background: rgba(255,255,255,0.05);
     backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     border: 1px solid rgba(201,168,76,0.3);
     border-radius: 16px;
     padding: 20px 15px 15px;
@@ -1647,4 +1650,120 @@ html[dir="rtl"] .footer-names {
 
 .anim-item.in-view .bopup-anim {
     animation: bopUp 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+/* ============================================================
+   MOBILE ANIMATION FIXES
+   ============================================================ */
+
+/* GPU acceleration for smooth mobile animations */
+.curtain,
+.curtain-fold,
+.curtain-valance,
+.curtain-shimmer,
+.glass-panel,
+.anim-item,
+.scratch-card,
+.locked-content {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    will-change: transform, opacity;
+}
+
+/* Ensure curtain transitions work on iOS Safari */
+.curtain {
+    -webkit-transition: transform 3s cubic-bezier(0.77, 0, 0.175, 1);
+    transition: transform 3s cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+#curtain-overlay.open .curtain-left {
+    -webkit-transform: translateX(-105%) skewY(-1deg);
+}
+#curtain-overlay.open .curtain-right {
+    -webkit-transform: translateX(105%) skewY(1deg);
+}
+#curtain-overlay.open .curtain-valance {
+    -webkit-transform: translateY(-110%);
+    -webkit-transition: -webkit-transform 1.8s cubic-bezier(0.4, 0, 0.2, 1) 0.6s;
+}
+
+/* Scratch card touch handling */
+.scratch-canvas {
+    touch-action: none;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.scratch-card {
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Ensure scroll-triggered animations fire on mobile */
+.anim-item {
+    -webkit-transform: translateY(30px);
+    -webkit-transition: opacity 0.7s ease, -webkit-transform 0.7s ease;
+}
+
+.anim-item.in-view {
+    -webkit-transform: translateY(0);
+}
+
+/* Webkit keyframes for floating animation */
+@-webkit-keyframes floating {
+    0% { -webkit-transform: translateY(0px) rotate(0deg); }
+    50% { -webkit-transform: translateY(-8px) rotate(1deg); }
+    100% { -webkit-transform: translateY(0px) rotate(0deg); }
+}
+
+@-webkit-keyframes fadeSlideUp {
+    from { opacity: 0; -webkit-transform: translateY(25px); }
+    to { opacity: 1; -webkit-transform: translateY(0); }
+}
+
+@-webkit-keyframes bopUp {
+    0% { -webkit-transform: scale(0.5) translateY(50px); opacity: 0; }
+    60% { -webkit-transform: scale(1.1) translateY(-10px); opacity: 1; }
+    100% { -webkit-transform: scale(1) translateY(0); opacity: 1; }
+}
+
+@-webkit-keyframes curtainGlow {
+    0% { opacity: 0.4; -webkit-transform: translate(-50%, -50%) scale(0.9); }
+    100% { opacity: 1; -webkit-transform: translate(-50%, -50%) scale(1.2); }
+}
+
+@-webkit-keyframes shimmerSweep {
+    0% { left: -60%; }
+    100% { left: 160%; }
+}
+
+@-webkit-keyframes tasselSway {
+    0% { -webkit-transform: rotate(-3deg); }
+    100% { -webkit-transform: rotate(3deg); }
+}
+
+/* Prevent body scroll bounce on iOS */
+body.curtain-closed {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Fix iOS Safari 100vh issue */
+@supports (-webkit-touch-callout: none) {
+    .section {
+        min-height: -webkit-fill-available;
+    }
+    #curtain-overlay {
+        height: -webkit-fill-available;
+    }
+}
+
+/* Ensure confetti canvas covers full mobile screen */
+#confetti-canvas {
+    -webkit-transform: translateZ(0);
 }

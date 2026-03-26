@@ -706,13 +706,14 @@
                 }
             });
         }, {
-            threshold: 0.15,
-            rootMargin: '0px 0px -50px 0px'
+            threshold: 0.05,           // Lower threshold for mobile
+            rootMargin: '0px 0px 0px 0px'  // No negative margin — triggers earlier
         });
 
         document.querySelectorAll('.anim-item').forEach(el => observer.observe(el));
 
-        // Parallax
+        // Parallax — disabled on touch devices to prevent animation conflicts
+        const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
         const parallaxItems = document.querySelectorAll('.parallax-item');
         let ticked = false;
 
@@ -721,7 +722,8 @@
                 scrollIndicator.classList.remove('visible');
             }
 
-            if (!ticked) {
+            // Only run parallax on non-touch (desktop) for smooth performance
+            if (!isTouchDevice && !ticked) {
                 window.requestAnimationFrame(() => {
                     const scrollY = window.scrollY;
                     parallaxItems.forEach(item => {
@@ -789,6 +791,9 @@
     }
 
     function setup3DTilt() {
+        // Skip 3D tilt on touch devices — causes jank and conflicts with scroll
+        if ('ontouchstart' in window || navigator.maxTouchPoints > 0) return;
+
         const panels = document.querySelectorAll('.glass-panel');
         panels.forEach(panel => {
             panel.addEventListener('mousemove', e => {
@@ -797,7 +802,6 @@
                 const y = e.clientY - rect.top;
                 const centerX = rect.width / 2;
                 const centerY = rect.height / 2;
-                // Reduce the intensity string calculation
                 const tiltX = (y - centerY) / -40;
                 const tiltY = (x - centerX) / 40;
                 panel.style.transform = `perspective(1000px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) scale3d(1.02, 1.02, 1.02)`;
