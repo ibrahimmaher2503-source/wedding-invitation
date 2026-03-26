@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Karim & Roua — Wedding Invitation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Great+Vibes&family=Cairo:wght@400;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+</head>
+
+<body>
+
+    <!-- ===================== CURTAIN OVERLAY ===================== -->
+    <div id="curtain-overlay">
+        <div class="curtain curtain-left">
+            <div class="curtain-fold"></div>
+            <div class="curtain-fold"></div>
+            <div class="curtain-fold"></div>
+            <div class="curtain-fold"></div>
+            <div class="curtain-fold"></div>
+            <div class="curtain-fold"></div>
+            <div class="curtain-fold"></div>
+        </div>
+        <div class="curtain curtain-right">
+            <div class="curtain-fold"></div>
+            <div class="curtain-fold"></div>
+            <div class="curtain-fold"></div>
+            <div class="curtain-fold"></div>
+            <div class="curtain-fold"></div>
+            <div class="curtain-fold"></div>
+            <div class="curtain-fold"></div>
+        </div>
+        <div class="curtain-shimmer"></div>
+        <div class="curtain-valance"></div>
+        <button id="enter-btn" class="enter-button">
+            <span data-en="Open Invitation" data-it="Apri Invito" data-ar="افتح الدعوة">Open Invitation</span>
+        </button>
+    </div>
+
+    <!-- ===================== FIXED UI ===================== -->
+    <header id="top-bar">
+        <div class="branding">
+            <svg class="branding-icon" width="28" height="28" viewBox="0 0 28 28" fill="none">
+                <path d="M14 2C8 2 4 6 4 10c0 3 2 5 4 6l-1 8h14l-1-8c2-1 4-3 4-6 0-4-4-8-10-8z" stroke="currentColor"
+                    stroke-width="1.5" fill="none" />
+                <path d="M10 10c1-2 3-3 4-3s3 1 4 3" stroke="currentColor" stroke-width="1.5" fill="none" />
+            </svg>
+            <div>
+                <span class="branding-name">K & R</span>
+                <span class="branding-sub">WEDDING</span>
+            </div>
+        </div>
+        <button id="info-btn" class="info-button" aria-label="Info">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <circle cx="10" cy="10" r="9" stroke="currentColor" stroke-width="1.5" />
+                <text x="10" y="14" text-anchor="middle" fill="currentColor" font-size="12" font-family="serif">i</text>
+            </svg>
+        </button>
+        <div id="lang-toggle">
+            <button class="lang-btn active" data-lang="en">EN</button>
+            <button class="lang-btn" data-lang="it">IT</button>
+            <button class="lang-btn" data-lang="ar">AR</button>
+        </div>
+    </header>
+
+    <button id="sound-toggle" class="sound-btn" aria-label="Toggle sound">
+        <svg id="sound-icon-on" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2">
+            <path d="M11 5L6 9H2v6h4l5 4V5z" />
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07" />
+        </svg>
+        <svg id="sound-icon-off" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" style="display:none">
+            <path d="M11 5L6 9H2v6h4l5 4V5z" />
+            <line x1="23" y1="9" x2="17" y2="15" />
+            <line x1="17" y1="9" x2="23" y2="15" />
+        </svg>
+    </button>
+
+    <div id="scroll-indicator" class="scroll-down">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M7 13l5 5 5-5M7 6l5 5 5-5" />
+        </svg>
+    </div>
+
+    <!-- ===================== MAIN CONTENT ===================== -->
+    <canvas id="dust-canvas" class="background-canvas"></canvas>
+    <div id="flare-overlay"></div>
+    <main id="main-content">
+
+        <!-- HERO SECTION -->
+        <section id="hero" class="section">
+            <div class="hero-inner glass-panel anim-item parallax-item" data-speed="0.05">
+                <p class="invitation-line" data-en="YOU ARE CORDIALLY INVITED TO"
+                    data-it="SIETE CORDIALMENTE INVITATI A" data-ar="ندعوكم بحرارة إلى">
+                    YOU ARE CORDIALLY INVITED TO
+                </p>
+                <p class="invitation-line" data-en="CELEBRATE THE WEDDING OF" data-it="CELEBRARE IL MATRIMONIO DI"
+                    data-ar="الاحتفال بزفاف">
+                    CELEBRATE THE WEDDING OF
+                </p>
+                <div class="names-block">
+                    <h1 class="name name-groom">Karim</h1>
+                    <span class="ampersand">&amp;</span>
+                    <h1 class="name name-bride">Roaa</h1>
+                </div>
+                <!-- Animated floral Lottie -->
+                <lottie-player src="https://lottie.host/embed/8a5d03c9-bbd4-4db6-aab7-5cdbd4daf805/RM5hytj6jC.lottie" background="transparent" speed="1"
+                    style="width: 160px; height: 160px; margin: 10px auto;" loop autoplay></lottie-player>
+                <p class="welcome-text"
+                    data-en="WE WOULD LIKE TO INVITE YOU TO CELEBRATE WITH US THE MOST SPECIAL DAY OF OUR LIVES. IT WOULD BE AN HONOUR TO HAVE YOU PRESENT AT THIS IMPORTANT MOMENT."
+                    data-it="VORREMMO INVITARVI A CELEBRARE CON NOI IL GIORNO PIU SPECIALE DELLA NOSTRA VITA. SAREBBE UN ONORE AVERVI PRESENTI IN QUESTO MOMENTO IMPORTANTE."
+                    data-ar="نود دعوتكم للاحتفال معنا بأكثر يوم تميزاً في حياتنا. سيكون من دواعي شرفنا حضوركم في هذه اللحظة المهمة.">
+                    WE WOULD LIKE TO INVITE YOU TO CELEBRATE WITH US THE MOST SPECIAL DAY OF OUR LIVES. IT WOULD BE AN
+                    HONOUR TO HAVE YOU PRESENT AT THIS IMPORTANT MOMENT.
+                </p>
+            </div>
+
+            <div class="hero-bg-accent glow-1"></div>
+            <div class="hero-bg-accent glow-2"></div>
+        </section>
+
+        <!-- SCRATCH REVEAL SECTION -->
+        <section id="reveal" class="section">
+            <div class="reveal-inner glass-panel anim-item parallax-item" data-speed="0.03">
+                <div class="scratch-hint">
+                    <div class="hand-icon floating-anim">
+                        <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                            <circle cx="20" cy="20" r="18" fill="var(--glass-bg)" stroke="currentColor"
+                                stroke-width="1" />
+                            <path
+                                d="M20 12v4m0 0c-1 0-3 1-3 3v6c0 2 1 3 3 3h2c2 0 3-1 3-3v-4c0-1-1-2-2-2m-3-3c0-1 1-2 2-2s2 1 2 2v3"
+                                stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                        </svg>
+                    </div>
+                    <p data-en="Scratch all three circles to continue"
+                        data-it="Gratta tutti e tre i cerchi per continuare" data-ar="امسح الدوائر الثلاث للمتابعة">
+                        Scratch all three circles to continue</p>
+                </div>
+
+                <h2 class="script-title floating-anim-slow" data-en="Reveal" data-it="Scopri" data-ar="اكتشاف">Reveal
+                </h2>
+                <p class="section-subtitle" data-en="SCRATCH TO DISCOVER THE DATE" data-it="GRATTA PER SCOPRIRE LA DATA"
+                    data-ar="امسح لاكتشاف التاريخ">SCRATCH TO DISCOVER THE DATE</p>
+
+                <div class="scratch-cards anim-item">
+                    <div class="scratch-card bopup-anim" style="animation-delay: 0.1s">
+                        <div class="scratch-value">29</div>
+                        <canvas class="scratch-canvas"></canvas>
+                    </div>
+                    <div class="scratch-card bopup-anim" style="animation-delay: 0.3s">
+                        <div class="scratch-value">April</div>
+                        <canvas class="scratch-canvas"></canvas>
+                    </div>
+                    <div class="scratch-card bopup-anim" style="animation-delay: 0.5s">
+                        <div class="scratch-value">2026</div>
+                        <canvas class="scratch-canvas"></canvas>
+                    </div>
+                </div>
+
+                <p class="married-text" data-en="We're getting married!" data-it="Ci sposiamo!" data-ar="نحن نتزوج!">
+                    We're getting married!</p>
+            </div>
+        </section>
+
+        <!-- CONFETTI CANVAS -->
+        <canvas id="confetti-canvas"></canvas>
+
+        <div id="locked-sections" class="locked-content">
+            <!-- MENU SECTION -->
+            <section id="menu" class="section">
+                <div class="menu-inner anim-item parallax-item" data-speed="0.04">
+                    <div class="menu-frame glass-panel">
+                        <!-- Ribbon bow at top -->
+                        <div class="menu-bow">
+                            <svg width="120" height="50" viewBox="0 0 120 50" fill="none">
+                                <path d="M60 25 Q40 5 15 15 Q5 20 15 30 Q30 40 60 25" stroke="currentColor"
+                                    stroke-width="1.5" fill="none" />
+                                <path d="M60 25 Q80 5 105 15 Q115 20 105 30 Q90 40 60 25" stroke="currentColor"
+                                    stroke-width="1.5" fill="none" />
+                                <path d="M55 25 Q60 35 58 45" stroke="currentColor" stroke-width="1.5" fill="none" />
+                                <path d="M65 25 Q60 35 62 45" stroke="currentColor" stroke-width="1.5" fill="none" />
+                            </svg>
+                        </div>
+
+                        <div class="menu-courses">
+                            <div class="menu-course anim-item floating-anim" style="animation-delay: 0.1s">
+                                <h3 data-en="S A L A D S" data-it="I N S A L A T E" data-ar="ال س ل ط ا ت">S A L A D S
+                                </h3>
+                                <p data-en="Authentic Egyptian Delights" data-it="Autentiche delizie egiziane"
+                                    data-ar="مقبلات وسلطات مصرية أصيلة">Authentic Egyptian Delights</p>
+                                <p class="italic" data-en="Tahini, Baba Ghanoush & Baladi Salad"
+                                    data-it="Tahini, Baba Ghanoush e Insalata Baladi"
+                                    data-ar="طحينة، بابا غنوج، وسلطة بلدي">Tahini, Baba Ghanoush & Baladi Salad</p>
+                            </div>
+                            <div class="menu-course anim-item floating-anim" style="animation-delay: 0.2s">
+                                <h3 data-en="T R A D I T I O N A L" data-it="T R A D I Z I O N A L E"
+                                    data-ar="أ ط ب ا ق  ت ق ل ي د ي ة">T R A D I T I O N A L</h3>
+                                <p data-en="Macarona Béchamel & Rokak" data-it="Macarona Béchamel e Rokak"
+                                    data-ar="مكرونة بالبشاميل ورقاق باللحمة">Macarona Béchamel & Rokak</p>
+                                <p class="italic" data-en="with rich minced beef and creamy sauce"
+                                    data-it="con ragù di manzo e salsa cremosa"
+                                    data-ar="مع اللحم المفروم وصلصة البشاميل الغنية">with rich minced beef and creamy
+                                    sauce</p>
+                            </div>
+                            <div class="menu-course anim-item floating-anim" style="animation-delay: 0.3s">
+                                <h3 data-en="M A I N  C O U R S E" data-it="S E C O N D O"
+                                    data-ar="ال ط ب ق  ال ر ئ ي س ي">S E C O N D O</h3>
+                                <p data-en="Mixed Grill Selection" data-it="Selezione di carni miste alla griglia"
+                                    data-ar="تشكيلة مشويات">Mixed Grill Selection</p>
+                                <p class="italic" data-en="Shish Tawook & Kofta with spiced Roz Kharouf"
+                                    data-it="Shish Tawook e Kofta con Riso speziato"
+                                    data-ar="شيش طاووق وكفتة مع أرز الخروف المتبل">Shish Tawook & Kofta with spiced Roz
+                                    Kharouf</p>
+                            </div>
+                            <div class="menu-course anim-item floating-anim" style="animation-delay: 0.4s">
+                                <h3 data-en="D E S S E R T" data-it="D O L C E" data-ar="ال ح ل و ي ا ت">D O L C E</h3>
+                                <p data-en="Oriental Sweets & Om Ali" data-it="Dolci orientali e Om Ali"
+                                    data-ar="حلويات شرقية وأم علي">Oriental Sweets & Om Ali</p>
+                                <p class="italic" data-en="with pistachios and fresh whipped cream"
+                                    data-it="con pistacchi e panna montata fresca" data-ar="مع الفستق والقشطة الطازجة">
+                                    with pistachios and fresh whipped cream</p>
+                            </div>
+                        </div>
+
+                        <div class="menu-illustration anim-item">
+                            <p class="vini-label" data-en="Refreshments" data-it="Bevande" data-ar="المشروبات والعصائر">
+                                Refreshments</p>
+                            <svg class="table-drawing" viewBox="0 0 200 140" fill="none">
+                                <rect x="40" y="70" width="120" height="5" rx="2" stroke="currentColor"
+                                    stroke-width="1.2" />
+                                <line x1="55" y1="75" x2="50" y2="130" stroke="currentColor" stroke-width="1.2" />
+                                <line x1="145" y1="75" x2="150" y2="130" stroke="currentColor" stroke-width="1.2" />
+                                <path d="M25 85 Q20 75 25 65 L30 65 Q28 75 30 85" stroke="currentColor" stroke-width="1"
+                                    fill="none" />
+                                <line x1="22" y1="85" x2="22" y2="120" stroke="currentColor" stroke-width="1" />
+                                <line x1="33" y1="85" x2="33" y2="120" stroke="currentColor" stroke-width="1" />
+                                <path d="M170 85 Q175 75 170 65 L165 65 Q167 75 165 85" stroke="currentColor"
+                                    stroke-width="1" fill="none" />
+                                <line x1="163" y1="85" x2="163" y2="120" stroke="currentColor" stroke-width="1" />
+                                <line x1="173" y1="85" x2="173" y2="120" stroke="currentColor" stroke-width="1" />
+                                <line x1="100" y1="70" x2="100" y2="35" stroke="currentColor" stroke-width="1.2" />
+                                <path d="M85 40 Q90 35 95 38" stroke="currentColor" stroke-width="1" fill="none" />
+                                <path d="M105 40 Q110 35 115 38" stroke="currentColor" stroke-width="1" fill="none" />
+                                <line x1="85" y1="40" x2="85" y2="30" stroke="currentColor" stroke-width="1" />
+                                <line x1="115" y1="40" x2="115" y2="30" stroke="currentColor" stroke-width="1" />
+                                <ellipse cx="85" cy="27" rx="3" ry="5" stroke="currentColor" stroke-width="0.8"
+                                    fill="none" />
+                                <ellipse cx="100" cy="32" rx="3" ry="5" stroke="currentColor" stroke-width="0.8"
+                                    fill="none" />
+                                <ellipse cx="115" cy="27" rx="3" ry="5" stroke="currentColor" stroke-width="0.8"
+                                    fill="none" />
+                                <path d="M95 38 Q92 20 88 15 M100 35 Q100 18 100 10 M105 38 Q108 20 112 15"
+                                    stroke="currentColor" stroke-width="0.8" fill="none" />
+                                <circle cx="88" cy="13" r="3" stroke="currentColor" stroke-width="0.8" fill="none" />
+                                <circle cx="100" cy="8" r="3" stroke="currentColor" stroke-width="0.8" fill="none" />
+                                <circle cx="112" cy="13" r="3" stroke="currentColor" stroke-width="0.8" fill="none" />
+                                <ellipse cx="65" cy="68" rx="12" ry="3" stroke="currentColor" stroke-width="0.8"
+                                    fill="none" />
+                                <ellipse cx="135" cy="68" rx="12" ry="3" stroke="currentColor" stroke-width="0.8"
+                                    fill="none" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- DRESS CODE SECTION -->
+            <section id="dress-code" class="section">
+                <div class="dress-inner glass-panel anim-item parallax-item" data-speed="0.05">
+                    <h2 class="dress-title floating-anim-slow" data-en="Dress Code" data-it="Dress Code"
+                        data-ar="قواعد اللباس">Dress Code</h2>
+                    <p class="dress-desc" data-en="FORMAL ATTIRE" data-it="ABBIGLIAMENTO FORMALE" data-ar="ملابس رسمية">
+                        FORMAL ATTIRE</p>
+                    <div class="dress-colors">
+                        <div class="color-swatch floating-anim" style="background:#0f172a; animation-delay: 0s"></div>
+                        <div class="color-swatch floating-anim" style="background:#be123c; animation-delay: 0.1s"></div>
+                        <div class="color-swatch floating-anim" style="background:#042f2e; animation-delay: 0.2s"></div>
+                        <div class="color-swatch floating-anim" style="background:#d97706; animation-delay: 0.3s"></div>
+                    </div>
+                    <p class="dress-note" data-en="We kindly ask guests to avoid wearing white or ivory"
+                        data-it="Chiediamo gentilmente agli ospiti di evitare il bianco o l'avorio"
+                        data-ar="نرجو من الضيوف الكرام تجنب ارتداء اللون الأبيض أو العاجي">We kindly ask guests to avoid
+                        wearing white or ivory</p>
+                </div>
+            </section>
+
+            <!-- COUNTDOWN SECTION -->
+            <section id="countdown" class="section">
+                <div class="countdown-inner glass-panel anim-item parallax-item" data-speed="0.06">
+                    <h2 class="script-title glass-text" data-en="Countdown" data-it="Conto alla rovescia"
+                        data-ar="العد التنازلي">Countdown</h2>
+                    <div class="countdown-boxes">
+                        <div class="countdown-box anim-item floating-anim" style="animation-delay: 0.1s">
+                            <span class="cd-value" id="cd-days">000</span>
+                            <span class="cd-label" data-en="DAYS" data-it="GIORNI" data-ar="أيام">DAYS</span>
+                        </div>
+                        <div class="countdown-box anim-item floating-anim" style="animation-delay: 0.2s">
+                            <span class="cd-value" id="cd-hours">00</span>
+                            <span class="cd-label" data-en="HOURS" data-it="ORE" data-ar="ساعات">HOURS</span>
+                        </div>
+                        <div class="countdown-box anim-item floating-anim" style="animation-delay: 0.3s">
+                            <span class="cd-value" id="cd-min">00</span>
+                            <span class="cd-label" data-en="MIN" data-it="MIN" data-ar="دقائق">MIN</span>
+                        </div>
+                        <div class="countdown-box anim-item floating-anim" style="animation-delay: 0.4s">
+                            <span class="cd-value" id="cd-sec">00</span>
+                            <span class="cd-label" data-en="SEC" data-it="SEC" data-ar="ثواني">SEC</span>
+                        </div>
+                    </div>
+                    <p class="until-text" data-en="until the big day" data-it="al grande giorno"
+                        data-ar="حتى اليوم الكبير">until the big day</p>
+                </div>
+            </section>
+
+            <!-- VENUE SECTION -->
+            <section id="venue" class="section">
+                <div class="venue-inner glass-panel anim-item parallax-item" data-speed="0.04">
+                    <p class="venue-intro" data-en="THE CELEBRATION WILL TAKE PLACE AT"
+                        data-it="LA CELEBRAZIONE SI TERRA PRESSO" data-ar="سيقام الاحتفال في">THE CELEBRATION WILL TAKE
+                        PLACE AT</p>
+
+                    <div class="venue-badge" data-en="Extra: custom illustration<br>of your venue"
+                        data-it="Extra: illustrazione personalizzata<br>della tua location"
+                        data-ar="إضافة: رسم توضيحي<br>لمكان حفلكم">Extra: custom illustration<br>of your venue</div>
+
+                    <div class="venue-illustration anim-item floating-anim-slow">
+                        <svg viewBox="0 0 400 200" fill="none" class="villa-svg">
+                            <rect x="120" y="60" width="160" height="100" stroke="currentColor" stroke-width="1.5"
+                                fill="none" />
+                            <path d="M110 60 L200 20 L290 60" stroke="currentColor" stroke-width="1.5" fill="none" />
+                            <rect x="140" y="75" width="20" height="25" rx="10" stroke="currentColor" stroke-width="1"
+                                fill="none" />
+                            <rect x="175" y="75" width="20" height="25" rx="10" stroke="currentColor" stroke-width="1"
+                                fill="none" />
+                            <rect x="210" y="75" width="20" height="25" rx="10" stroke="currentColor" stroke-width="1"
+                                fill="none" />
+                            <rect x="245" y="75" width="20" height="25" rx="10" stroke="currentColor" stroke-width="1"
+                                fill="none" />
+                            <rect x="140" y="115" width="20" height="25" rx="10" stroke="currentColor" stroke-width="1"
+                                fill="none" />
+                            <rect x="245" y="115" width="20" height="25" rx="10" stroke="currentColor" stroke-width="1"
+                                fill="none" />
+                            <path d="M185 160 L185 120 Q200 110 215 120 L215 160" stroke="currentColor"
+                                stroke-width="1.5" fill="none" />
+                            <rect x="60" y="80" width="60" height="80" stroke="currentColor" stroke-width="1.2"
+                                fill="none" />
+                            <rect x="280" y="80" width="60" height="80" stroke="currentColor" stroke-width="1.2"
+                                fill="none" />
+                            <path d="M55 80 L90 55 L125 80" stroke="currentColor" stroke-width="1.2" fill="none" />
+                            <path d="M275 80 L310 55 L345 80" stroke="currentColor" stroke-width="1.2" fill="none" />
+                            <rect x="75" y="95" width="15" height="20" rx="7" stroke="currentColor" stroke-width="0.8"
+                                fill="none" />
+                            <rect x="100" y="95" width="15" height="20" rx="7" stroke="currentColor" stroke-width="0.8"
+                                fill="none" />
+                            <rect x="295" y="95" width="15" height="20" rx="7" stroke="currentColor" stroke-width="0.8"
+                                fill="none" />
+                            <rect x="320" y="95" width="15" height="20" rx="7" stroke="currentColor" stroke-width="0.8"
+                                fill="none" />
+                            <path d="M30 160 Q100 155 200 160 Q300 165 370 160" stroke="currentColor" stroke-width="1"
+                                fill="none" />
+                            <ellipse cx="45" cy="130" rx="15" ry="25" stroke="currentColor" stroke-width="0.8"
+                                fill="none" />
+                            <line x1="45" y1="155" x2="45" y2="160" stroke="currentColor" stroke-width="1" />
+                            <ellipse cx="355" cy="130" rx="15" ry="25" stroke="currentColor" stroke-width="0.8"
+                                fill="none" />
+                            <line x1="355" y1="155" x2="355" y2="160" stroke="currentColor" stroke-width="1" />
+                            <ellipse cx="200" cy="175" rx="25" ry="8" stroke="currentColor" stroke-width="0.8"
+                                fill="none" />
+                            <line x1="200" y1="167" x2="200" y2="172" stroke="currentColor" stroke-width="0.8" />
+                            <path d="M195 167 Q200 162 205 167" stroke="currentColor" stroke-width="0.8" fill="none" />
+                            <rect x="230" y="25" width="12" height="20" stroke="currentColor" stroke-width="1"
+                                fill="none" />
+                        </svg>
+                    </div>
+
+                    <h2 class="venue-name anim-item">ELMASA<br>Wedding Hall</h2>
+                    <p class="venue-address anim-item" data-en="AT 7:30 PM"
+                        data-it="ALLE 19:30"
+                        data-ar="الساعة 7:30 مساءً">AT 7:30 PM</p>
+                    <p class="venue-date anim-item" data-en="April 29, 2026" data-it="29 Aprile 2026"
+                        data-ar="29 أبريل 2026">April 29, 2026</p>
+                </div>
+            </section>
+
+            <!-- MESSAGE SECTION (Replaced RSVP) -->
+            <section id="rsvp" class="section">
+                <div class="rsvp-inner glass-panel anim-item parallax-item" data-speed="0.05">
+                    <h2 class="script-title floating-anim-slow" data-en="Welcome" data-it="Benvenuti"
+                        data-ar="أهلاً بكم">Welcome</h2>
+                    <!-- Second Lottie file added here (Sparkles/Party animation) -->
+                    <lottie-player src="https://fonts.gstatic.com/s/e/notoemoji/latest/2728/lottie.json"
+                        background="transparent" speed="1"
+                        style="width: 80px; height: 80px; margin: -10px auto 10px auto;" loop autoplay></lottie-player>
+                    <p class="rsvp-text" style="text-transform: none; line-height: 1.8;"
+                        data-en="You are cordially invited to celebrate the wedding of<br>Karim &amp; Roaa<br><br>We would like to invite you to celebrate with us the most special day of our lives. It would be an honour to have you present at this important moment."
+                        data-it="Siete cordialmente invitati a celebrare il matrimonio di<br>Karim e Roaa<br><br>Vorremmo invitarvi a celebrare con noi il giorno più speciale della nostra vita. Sarebbe un onore avervi presenti in questo momento importante."
+                        data-ar="يسعدنا دعوتكم للاحتفال بزفاف<br>كريم ورؤى<br><br>نود دعوتكم للاحتفال معنا بأكثر يوم تميزاً في حياتنا. سيكون من دواعي شرفنا حضوركم في هذه اللحظة المهمة.">
+                        You are cordially invited to celebrate the wedding of<br>
+                        <strong>Karim &amp; Roaa</strong><br><br>
+                        We would like to invite you to celebrate with us the most special day of our lives. It would be
+                        an honour to have you present at this important moment.
+                    </p>
+                </div>
+            </section>
+
+            <!-- FOOTER -->
+            <footer class="footer">
+                <p class="footer-names">Karim &amp; Roaa</p>
+                <p class="footer-date">29 . 04 . 2026</p>
+            </footer>
+        </div> <!-- end locked-sections -->
+
+    </main>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
