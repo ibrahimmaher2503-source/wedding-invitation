@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 220" fill="#4a5a3a">
+  <!-- K letter -->
+  <path d="M40 20 L40 180 L55 180 L55 115 L58 112 L110 180 L130 180 L72 105 L125 35 L105 35 L58 100 L55 97 L55 20 Z"/>
+  <!-- R letter overlapping -->
+  <path d="M85 20 L85 180 L100 180 L100 115 L105 110 L140 180 L158 180 L120 107 C145 100 158 82 158 60 C158 33 138 20 108 20 Z M100 35 L108 35 C130 35 143 45 143 62 C143 79 130 92 108 92 L100 92 Z"/>
+  <!-- Elegant tail swash from R -->
+  <path d="M140 180 Q150 195 145 205 Q138 218 120 215 Q110 213 108 208" fill="none" stroke="#4a5a3a" stroke-width="6" stroke-linecap="round"/>
+</svg>

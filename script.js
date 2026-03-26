@@ -9,7 +9,7 @@
 
     // ── CONFIG ──────────────────────────────────────────────
     const WEDDING_DATE = new Date('2026-04-29T19:30:00');
-    const SCRATCH_REVEAL_THRESHOLD = 0.45; // 45% scratched to auto-reveal
+    const SCRATCH_REVEAL_THRESHOLD = 0.12; // 12% scratched — very easy, few swipes
 
     // ── STATE ───────────────────────────────────────────────
     let currentLang = 'en';
@@ -41,7 +41,6 @@
 
     function init() {
         setupCurtain();
-        setupLanguageToggle();
         setupSoundToggle();
         setupScratchCards();
         setupCountdown();
@@ -61,13 +60,12 @@
         if (curtainOpened) return;
         curtainOpened = true;
 
-        // Auto-enable sound upon first user interaction
+        // Auto-enable sound upon first user interaction (Safari requires this)
         if (!soundEnabled) {
             soundEnabled = true;
             soundIconOn.style.display = 'block';
             soundIconOff.style.display = 'none';
-            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            if (audioCtx.state === 'suspended') audioCtx.resume();
+            initAudioContext();
             playBackgroundAmbience();
         }
 
@@ -106,45 +104,36 @@
         setTimeout(() => welcomeText.classList.add('animate'), 800);
     }
 
-    // ── LANGUAGE TOGGLE ─────────────────────────────────────
-    function setupLanguageToggle() {
-        const buttons = document.querySelectorAll('.lang-btn');
-        buttons.forEach(btn => {
-            btn.addEventListener('click', () => {
-                const lang = btn.dataset.lang;
-                if (lang === currentLang) return;
-                currentLang = lang;
-
-                buttons.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-
-                updateLanguage(lang);
-            });
-        });
-    }
-
-    function updateLanguage(lang) {
-        document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
-        document.documentElement.lang = lang;
-
-        document.querySelectorAll('[data-' + lang + ']').forEach(el => {
-            el.innerHTML = el.getAttribute('data-' + lang); // Allow <br> inside translation
-        });
-
-        document.querySelectorAll('[data-' + lang + '-placeholder]').forEach(el => {
-            el.placeholder = el.getAttribute('data-' + lang + '-placeholder');
-        });
-    }
-
     // ── SOUND SYSTEM ────────────────────────────────────────
+
+    // Safari/iOS requires AudioContext created & resumed inside a user gesture
+    function initAudioContext() {
+        if (!audioCtx) {
+            const AC = window.AudioContext || window.webkitAudioContext;
+            audioCtx = new AC();
+        }
+        // Safari keeps it suspended until a user gesture triggers resume
+        if (audioCtx.state === 'suspended') {
+            audioCtx.resume();
+        }
+        // iOS Safari hack: play a silent buffer to unlock audio
+        try {
+            const silentBuffer = audioCtx.createBuffer(1, 1, 22050);
+            const src = audioCtx.createBufferSource();
+            src.buffer = silentBuffer;
+            src.connect(audioCtx.destination);
+            src.start(0);
+        } catch (e) { /* ignore */ }
+    }
+
     function setupSoundToggle() {
         soundToggle.addEventListener('click', () => {
             soundEnabled = !soundEnabled;
             soundIconOn.style.display = soundEnabled ? 'block' : 'none';
             soundIconOff.style.display = soundEnabled ? 'none' : 'block';
 
-            if (soundEnabled && !audioCtx) {
-                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            if (soundEnabled) {
+                initAudioContext();
             }
 
             if (soundEnabled) {
@@ -159,7 +148,8 @@
     let ambienceGain = null;
 
     function playBackgroundAmbience() {
-        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (!audioCtx) initAudioContext();
+        if (!audioCtx) return;
         if (audioCtx.state === 'suspended') audioCtx.resume();
         
         ambienceGain = audioCtx.createGain();
@@ -219,7 +209,8 @@
     }
 
     function playRealisticOpening() {
-        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (!audioCtx) initAudioContext();
+        if (!audioCtx) return;
         if (audioCtx.state === 'suspended') audioCtx.resume();
 
         // Deep swoosh
@@ -416,7 +407,7 @@
 
                 ctx.globalCompositeOperation = 'destination-out';
                 ctx.beginPath();
-                ctx.arc(pos.x, pos.y, size * 0.12, 0, Math.PI * 2);
+                ctx.arc(pos.x, pos.y, size * 0.30, 0, Math.PI * 2);
                 ctx.fill();
 
                 checkScratchProgress(ctx, canvas, size, index);
@@ -477,40 +468,67 @@
     }
 
     function drawFoil(ctx, cx, cy, radius) {
-        // Creates a rich realistic foil texture
-        const gradient = ctx.createRadialGradient(
-            cx - radius * 0.4, cy - radius * 0.4, 0,
-            cx, cy, radius
-        );
-        gradient.addColorStop(0, '#f9edd1');
-        gradient.addColorStop(0.3, '#d4a843');
-        gradient.addColorStop(0.5, '#8b6914');
-        gradient.addColorStop(0.7, '#c9a84c');
-        gradient.addColorStop(1, '#a07c1e');
-
+        // Clip to circle
+        ctx.save();
         ctx.beginPath();
         ctx.arc(cx, cy, radius, 0, Math.PI * 2);
-        ctx.fillStyle = gradient;
-        ctx.fill();
+        ctx.clip();
 
-        // Overlay noise texture for metallic grain
-        ctx.globalCompositeOperation = 'overlay';
-        ctx.fillStyle = 'rgba(255,255,255,0.05)';
-        for(let i=0; i<100; i++) {
+        // Base gold fill — warm saturated gold
+        const baseGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, radius);
+        baseGrad.addColorStop(0, '#e8cc6e');
+        baseGrad.addColorStop(0.4, '#c9a33c');
+        baseGrad.addColorStop(0.7, '#b8922a');
+        baseGrad.addColorStop(1, '#9a7a1c');
+        ctx.fillStyle = baseGrad;
+        ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
+
+        // Brushed metal lines radiating from center (concentric sunburst)
+        const numLines = 180;
+        for (let i = 0; i < numLines; i++) {
+            const angle = (i / numLines) * Math.PI * 2;
+            const brightness = 0.08 + Math.random() * 0.12;
+            const isLight = i % 3 === 0;
             ctx.beginPath();
-            ctx.arc(
-                cx + (Math.random()-0.5) * radius * 2,
-                cy + (Math.random()-0.5) * radius * 2,
-                Math.random() * 3, 0, Math.PI*2
+            ctx.moveTo(cx, cy);
+            ctx.lineTo(
+                cx + Math.cos(angle) * radius * 1.1,
+                cy + Math.sin(angle) * radius * 1.1
             );
-            ctx.fill();
+            ctx.strokeStyle = isLight
+                ? 'rgba(255, 240, 180, ' + brightness + ')'
+                : 'rgba(120, 90, 20, ' + (brightness * 0.6) + ')';
+            ctx.lineWidth = 1.2 + Math.random() * 0.8;
+            ctx.stroke();
         }
 
-        ctx.globalCompositeOperation = 'source-over';
+        // Concentric rings for lathe-turned effect
+        for (let r = 10; r < radius; r += 4 + Math.random() * 3) {
+            ctx.beginPath();
+            ctx.arc(cx, cy, r, 0, Math.PI * 2);
+            ctx.strokeStyle = 'rgba(255, 230, 150, ' + (0.04 + Math.random() * 0.06) + ')';
+            ctx.lineWidth = 0.5 + Math.random() * 0.5;
+            ctx.stroke();
+        }
+
+        // Hot-spot highlight (upper left)
+        const shineGrad = ctx.createRadialGradient(
+            cx - radius * 0.3, cy - radius * 0.3, 0,
+            cx, cy, radius
+        );
+        shineGrad.addColorStop(0, 'rgba(255, 250, 220, 0.35)');
+        shineGrad.addColorStop(0.4, 'rgba(255, 240, 180, 0.1)');
+        shineGrad.addColorStop(1, 'rgba(0, 0, 0, 0.08)');
+        ctx.fillStyle = shineGrad;
+        ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
+
+        ctx.restore();
+
+        // Subtle outer ring
         ctx.beginPath();
-        ctx.arc(cx, cy, radius, 0, Math.PI * 2);
-        ctx.lineWidth = 1;
-        ctx.strokeStyle = 'rgba(255,255,255,0.4)';
+        ctx.arc(cx, cy, radius - 1, 0, Math.PI * 2);
+        ctx.lineWidth = 1.5;
+        ctx.strokeStyle = 'rgba(180, 150, 60, 0.3)';
         ctx.stroke();
     }
 
@@ -606,27 +624,45 @@
         const H = window.innerHeight;
         const particles = [];
         const colors = [
-            '#4a5a3a', '#6b7e58', '#3a4a2a', '#8a9a78', '#c9a84c', '#f5f0e8'
+            '#4a5a3a', '#6b7e58', '#8a9a78', '#c9a84c', '#e8d48b', '#f5f0e8', '#ffffff'
         ];
+        const shapes = ['circle', 'star', 'sparkle', 'ring'];
 
-        for (let i = 0; i < 200; i++) {
+        // Burst from center outwards like firework spray
+        for (let i = 0; i < 120; i++) {
+            const angle = (Math.random() * Math.PI * 2);
+            const speed = Math.random() * 12 + 4;
             particles.push({
-                x: W / 2 + (Math.random() - 0.5) * W * 0.8,
-                y: H * 0.4 + (Math.random() - 0.5) * 150,
-                vx: (Math.random() - 0.5) * 15,
-                vy: -(Math.random() * 10 + 5),
-                w: Math.random() * 8 + 4,
-                h: Math.random() * 6 + 3,
+                x: W / 2,
+                y: H * 0.45,
+                vx: Math.cos(angle) * speed,
+                vy: Math.sin(angle) * speed - 6,
+                r: Math.random() * 5 + 2,
                 color: colors[Math.floor(Math.random() * colors.length)],
+                shape: shapes[Math.floor(Math.random() * shapes.length)],
                 rotation: Math.random() * 360,
-                rotationSpeed: (Math.random() - 0.5) * 20,
-                gravity: 0.15 + Math.random() * 0.1,
+                rotationSpeed: (Math.random() - 0.5) * 12,
+                gravity: 0.08 + Math.random() * 0.06,
                 opacity: 1,
-                delay: Math.random() * 400,
+                delay: Math.random() * 300,
+                scale: Math.random() * 0.5 + 0.5,
+                twinkle: Math.random() * Math.PI * 2, // for sparkle pulsing
             });
         }
 
         const startTime = performance.now();
+
+        function drawStar(ctx, cx, cy, r, points) {
+            ctx.beginPath();
+            for (let i = 0; i < points * 2; i++) {
+                const radius = i % 2 === 0 ? r : r * 0.4;
+                const a = (i * Math.PI) / points - Math.PI / 2;
+                if (i === 0) ctx.moveTo(cx + Math.cos(a) * radius, cy + Math.sin(a) * radius);
+                else ctx.lineTo(cx + Math.cos(a) * radius, cy + Math.sin(a) * radius);
+            }
+            ctx.closePath();
+            ctx.fill();
+        }
 
         function animateConfetti(time) {
             confettiCtx.clearRect(0, 0, W, H);
@@ -639,23 +675,45 @@
                 p.vy += p.gravity;
                 p.x += p.vx;
                 p.y += p.vy;
-                p.vx *= 0.98;
+                p.vx *= 0.985;
                 p.rotation += p.rotationSpeed;
+                p.twinkle += 0.1;
 
-                if (p.y > H * 0.7) p.opacity -= 0.015;
-
+                if (p.y > H * 0.75) p.opacity -= 0.02;
                 if (p.opacity <= 0 || p.y > H + 50) return;
                 activeCount++;
 
                 confettiCtx.save();
                 confettiCtx.translate(p.x, p.y);
                 confettiCtx.rotate((p.rotation * Math.PI) / 180);
-                confettiCtx.globalAlpha = Math.max(0, p.opacity);
+                confettiCtx.scale(p.scale, p.scale);
+
+                // Twinkle effect for sparkles
+                const twinkleAlpha = p.shape === 'sparkle'
+                    ? Math.max(0, p.opacity * (0.5 + 0.5 * Math.sin(p.twinkle)))
+                    : p.opacity;
+                confettiCtx.globalAlpha = Math.max(0, twinkleAlpha);
                 confettiCtx.fillStyle = p.color;
-                confettiCtx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
-                // Glossy touch
-                confettiCtx.fillStyle = 'rgba(255,255,255,0.4)';
-                confettiCtx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h/2);
+
+                if (p.shape === 'circle') {
+                    confettiCtx.beginPath();
+                    confettiCtx.arc(0, 0, p.r, 0, Math.PI * 2);
+                    confettiCtx.fill();
+                } else if (p.shape === 'star') {
+                    drawStar(confettiCtx, 0, 0, p.r * 1.5, 5);
+                } else if (p.shape === 'sparkle') {
+                    // 4-point sparkle
+                    drawStar(confettiCtx, 0, 0, p.r * 1.8, 4);
+                    confettiCtx.fillStyle = 'rgba(255,255,255,0.6)';
+                    drawStar(confettiCtx, 0, 0, p.r * 0.8, 4);
+                } else if (p.shape === 'ring') {
+                    confettiCtx.beginPath();
+                    confettiCtx.arc(0, 0, p.r, 0, Math.PI * 2);
+                    confettiCtx.strokeStyle = p.color;
+                    confettiCtx.lineWidth = 1.5;
+                    confettiCtx.stroke();
+                }
+
                 confettiCtx.restore();
             });
 
