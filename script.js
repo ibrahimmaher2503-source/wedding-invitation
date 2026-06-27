@@ -624,7 +624,7 @@
         const H = window.innerHeight;
         const particles = [];
         const colors = [
-            '#4a5a3a', '#6b7e58', '#8a9a78', '#c9a84c', '#e8d48b', '#f5f0e8', '#ffffff'
+            '#7a0f12', '#a8161a', '#c9a84c', '#eccb78', '#8b6914', '#f2e8d0', '#ffffff'
         ];
         const shapes = ['circle', 'star', 'sparkle', 'ring'];
 
